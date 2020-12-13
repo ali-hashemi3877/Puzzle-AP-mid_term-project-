@@ -21,7 +21,7 @@ std::vector<std::shared_ptr<puzzle>> puzzle::get_children(){
     int index[2] = {};
     int sign[2] = {-1, 1};
     std::vector<std::array<int,2>> zero_index{};
-    for (size_t i{}; i < 3; i++){
+    for (size_t i{}; i < 3; i++){                 // find zero coordinate
         for (size_t j{}; j < 3; j++){
             if (puz[i][j] == 0){
                 index[0] = i;
@@ -29,7 +29,7 @@ std::vector<std::shared_ptr<puzzle>> puzzle::get_children(){
             }
         }
     }
-    for (int i{}; i < 2; i++){
+    for (int i{}; i < 2; i++){     // find zeros coordinates of next states
         for (int j{}; j < 2; j++){
             if (index[i]+sign[j] >= 0 && index[i]+sign[j] < 3){
                 if (i == 0){
@@ -43,14 +43,24 @@ std::vector<std::shared_ptr<puzzle>> puzzle::get_children(){
             }
         }
     }
-    for (size_t i{}; i < zero_index.size(); i++){
+    for (size_t i{}; i < zero_index.size(); i++){     // create next states
         std::array<std::array<int, 3>, 3> arr = puz;
         arr[index[0]][index[1]] = arr[zero_index[i][0]][zero_index[i][1]];
         arr[zero_index[i][0]][zero_index[i][1]] = 0;
-        auto ptr_arr = std::make_shared<puzzle>(arr);
-        all_puz.push_back(ptr_arr);
-        children.push_back(ptr_arr);
-        children[i]->parent = std::make_shared<puzzle>(puz);
+        if (this->parent != nullptr){
+            if (this->parent->puz == arr){
+                auto ptr_arr = std::make_shared<puzzle>(arr);
+                all_puz.push_back(ptr_arr);
+                children.push_back(ptr_arr);
+                children[children.size() - 1]->parent = std::make_shared<puzzle>(puz);
+            }
+        }
+        else{
+            auto ptr_arr = std::make_shared<puzzle>(arr);
+            all_puz.push_back(ptr_arr);
+            children.push_back(ptr_arr);
+            children[children.size() - 1]->parent = std::make_shared<puzzle>(puz);
+        }
     }
     return children;
 }
