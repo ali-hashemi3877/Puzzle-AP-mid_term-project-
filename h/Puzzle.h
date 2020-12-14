@@ -6,19 +6,22 @@
 #include <vector>
 #include <memory>
 
+using array = std::array<std::array<int, 3>, 3>;
+
 class puzzle{
     private:
-        std::array<std::array<int, 3>, 3> puz{};
-        std::array<std::array<int, 3>, 3> target = {1,2,3,4,5,6,7,8,0};
-        std::shared_ptr<puzzle> parent;
-        std::vector<std::shared_ptr<puzzle>> children;
-        std::vector<std::shared_ptr<puzzle>> all_puz;
+        array puz{};
+        array target = {1,2,3,4,5,6,7,8,0};
+        std::vector<array> children;
+        std::vector<array> not_order;
     public:
-        puzzle(std::array<std::array<int, 3>, 3> puzzle) : puz{puzzle} {}
+        puzzle(array puzzle) : puz{puzzle} {}
         puzzle() = default;
-        void get_puzzle();
-        void show_puzzle();
-        std::vector<std::shared_ptr<puzzle>>get_children();
-        bool check(std::shared_ptr<puzzle> puz) { return puz->puz == target; }
+        array get_puzzle();
+        void show_puzzle(array puz);
+        std::vector<array>get_children(array puz);
+        bool check(array puz) { return puz == target; }
+        std::vector<array> search();
+
 };
 #endif
