@@ -11,17 +11,23 @@ using array = std::array<std::array<int, 3>, 3>;
 class puzzle{
     private:
         array puz{};
-        array target = {1,2,3,4,5,6,7,8,0};
+        array target = {1,4,2,6,3,5,7,0,8};
         std::vector<array> children;
         std::vector<array> not_order;
+        std::shared_ptr<puzzle> parent;
+        std::vector<std::shared_ptr<puzzle>> all_puzzle;
     public:
         puzzle(array puzzle) : puz{puzzle} {}
         puzzle() = default;
         array get_puzzle();
         void show_puzzle(array puz);
-        std::vector<array>get_children(array puz);
+        std::vector<array> set_children(array puz);
         bool check(array puz) { return puz == target; }
-        std::vector<array> search();
-
+        void search();
+        puzzle find_puzzle();
+        std::vector<array> get_children() { return children; }
+        std::vector<array> get_not_order() { return not_order; }
+        std::vector<std::shared_ptr<puzzle>> get_all_puzzle() { return all_puzzle; }
+        array get_puz() { return puz; }      
 };
 #endif

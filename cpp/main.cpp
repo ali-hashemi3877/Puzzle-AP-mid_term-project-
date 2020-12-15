@@ -5,8 +5,25 @@
 int main(){
     puzzle puz{};
     array arr = puz.get_puzzle();
-    std::vector<std::vector<array>> floor{};
-    floor.push_back(puz.search());
+    puz.search();
+    // std::vector<array> children = puz.get_children();
+    // std::vector<array> not_order = puz.get_not_order();
+    std::vector<std::shared_ptr<puzzle>> all_puzzle = puz.get_all_puzzle();
+    for (size_t i{}; i < all_puzzle.size(); i++){
+        std::cout<< "children " << i+1 << ":\n";
+        puz.show_puzzle(all_puzzle[i]->get_puz());
+    }
+    // for (size_t i{}; i < not_order.size(); i++){
+    //     std::cout<< "not_order " << i+1 << ":\n";
+    //     puz.show_puzzle(not_order[i]);
+    // }
+    // std::vector<array> v = puz.set_children(arr);
+    // for (size_t i{}; i < v.size(); i++){
+    //     std::cout<< "state " << i+1 << ":\n";
+    //     puz.show_puzzle(v[i]);
+    // }
+    // std::vector<std::vector<array>> floor{};
+    // floor.push_back(puz.search());
     // for (size_t i{}; i < floor.size(); i++){
     //     for (size_t j{}; j < floor[i].size(); j++){
     //         std::cout<< "state " << j+1 << ":\n";

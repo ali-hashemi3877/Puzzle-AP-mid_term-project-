@@ -17,7 +17,7 @@ void puzzle::show_puzzle(array puz){
     }
 }
 
-std::vector<array> puzzle::get_children(array puz){
+std::vector<array> puzzle::set_children(array puz){
     int index[2] = {};
     int move[2] = {-1, 1};
     std::vector<std::array<int,2>> zero_index{};
@@ -51,25 +51,36 @@ std::vector<array> puzzle::get_children(array puz){
         for (size_t j{}; j < not_order.size(); j++)
             if (not_order[j] == arr)
                 flag = false;
-        if (flag)
+        if (flag){
+            auto ptr = std::make_shared<puzzle>(arr);
+            ptr->parent = std::make_shared<puzzle>(puz);
+            all_puzzle.push_back(ptr);
             children.push_back(arr);
+        }
     }
     return children;
 }
 
-std::vector<array> puzzle::search(){
+void puzzle::search(){
     int i{};
     std::vector<array> child{};
-    while(i < 2){
-        if (check(children[0]))
-            return children;
-        show_puzzle(children[0]);
-        child = get_children(children[0]);
+    while(i < 100 && children.size() > 0){
+        if (check(children[0])){
+            std::cout<< "we find the answer\n";
+            show_puzzle(children[0]);
+            break;
+            //return children;
+        }
+        // std::cout<< i+1 <<"st child:\n";
+        // show_puzzle(children[0]);
+        child = set_children(children[0]);
         not_order.push_back(children[0]);
-        show_puzzle(not_order[0]);
+        // std::cout<< "not_ordre " << i+1 << ":\n";
+        // show_puzzle(not_order[i]);
         children.erase(children.begin());
-        show_puzzle(children[0]);
+        // std::cout<< "after erasing\n";
+        // show_puzzle(children[0]);
         i++;
     }
-    return child;
+    //return child;
 }
