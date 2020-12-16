@@ -5,6 +5,8 @@ array puzzle::get_puzzle(){
     for (size_t i{}; i < 3; i++)
         for (size_t j{}; j < 3; j++)
             std::cin >> puz[i][j];
+    auto ptr = std::make_shared<puzzle>(puz);
+    all_puzzle.push_back(ptr);
     children.push_back(puz);
     return puz;
 }
@@ -53,7 +55,7 @@ std::vector<array> puzzle::set_children(array puz){
                 flag = false;
         if (flag){
             auto ptr = std::make_shared<puzzle>(arr);
-            ptr->parent = std::make_shared<puzzle>(puz);
+            ptr->parent = find_puzzle(puz);
             all_puzzle.push_back(ptr);
             children.push_back(arr);
         }
@@ -83,4 +85,24 @@ void puzzle::search(){
         i++;
     }
     //return child;
+}
+
+std::shared_ptr<puzzle> puzzle::find_puzzle(array target){
+    for (size_t i{}; i < all_puzzle.size(); i++){
+        if (all_puzzle[i]->get_puz() == target)
+            return all_puzzle[i];
+    }
+}
+
+std::deque<std::shared_ptr<puzzle>> puzzle::find_steps(){
+    std::shared_ptr<puzzle> puz = find_puzzle(target);
+    int i{};
+    while (puz != nullptr){
+        steps.push_front(puz);
+        // std::cout<< "step " << i+1 << ":\n";
+        // show_puzzle(puz->get_puz());
+        puz = puz->parent;
+        i++;
+    }
+    return steps;
 }
