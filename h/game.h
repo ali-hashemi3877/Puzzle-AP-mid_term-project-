@@ -15,6 +15,7 @@ class game{
             public:
                 array puz{};
                 std::shared_ptr<puzzle> parent;
+                std::vector<std::shared_ptr<puzzle>> children{};
                 puzzle(array puzzle) : puz{puzzle} {}
                 puzzle() = default;
                 void show_puzzle();

@@ -70,14 +70,14 @@ void game::set_children(std::shared_ptr<puzzle> puz){
         arr[index[0]][index[1]] = arr[zero_index[i][0]][zero_index[i][1]];
         arr[zero_index[i][0]][zero_index[i][1]] = 0;
         bool flag{true};
-        //for (size_t j{}; j < not_checked.size(); j++)
-        if (puz->parent != nullptr)
-            if (puz->parent->puz == arr)
+        for (size_t j{}; j < not_checked.size(); j++)
+            if (not_checked[j]->puz == arr)
                 flag = false;
         if (flag){
             auto ptr = std::make_shared<puzzle>(arr);
             ptr->parent = puz;
             not_checked.push_back(ptr);
+            puz->children.push_back(ptr);
         }
     }
 }
@@ -85,7 +85,7 @@ void game::set_children(std::shared_ptr<puzzle> puz){
 void game::BFS_search(){
     solvable();
     int i{};
-    while(flag && i < 100000){
+    while(flag && i < 10000){
         if (check(not_checked[0]->puz)){
             std::cout<< "we find the answer\n";
             not_checked[0]->show_puzzle();
