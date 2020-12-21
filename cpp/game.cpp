@@ -17,7 +17,7 @@ void game::get_puzzle(){
     initial_puz = root;    
 }
 
-bool game::solvable(){
+void game::solvable(){
     array puz{initial_puz->puz};
     std::array<int, 9> arr{};
     int invertion{};
@@ -30,11 +30,11 @@ bool game::solvable(){
                 invertion++;
     if (invertion % 2 == 0){
         not_checked.push_back(initial_puz);
-        return true;
+        flag = true;
     }
     else{
         std::cout<< "This puzzle is unsolvable\n";
-        return false;
+        flag = false;
     }
 }
 
@@ -83,9 +83,9 @@ void game::set_children(std::shared_ptr<puzzle> puz){
 }
 
 void game::BFS_search(){
-    bool flag{solvable()};
+    solvable();
     int i{};
-    while(flag && i < 1000){
+    while(flag && i < 100000){
         if (check(not_checked[0]->puz)){
             std::cout<< "we find the answer\n";
             not_checked[0]->show_puzzle();
@@ -99,15 +99,17 @@ void game::BFS_search(){
 }
 
 void game::show_steps(){
-    std::shared_ptr<puzzle> puz = not_checked[0];
-    int i{};
-    while (puz != nullptr){
-        steps.push_front(puz);
-        puz = puz->parent;
-        i++;
-    }
-    for (size_t i{}; i < steps.size(); i++){
-        std::cout<< "step " << i+1 << ":\n";
-        steps[i]->show_puzzle();
+    if (flag){
+        std::shared_ptr<puzzle> puz = not_checked[0];
+        int i{};
+        while (puz != nullptr){
+            steps.push_front(puz);
+            puz = puz->parent;
+            i++;
+        }
+        for (size_t i{}; i < steps.size(); i++){
+            std::cout<< "step " << i+1 << ":\n";
+            steps[i]->show_puzzle();
+        }
     }
 }
