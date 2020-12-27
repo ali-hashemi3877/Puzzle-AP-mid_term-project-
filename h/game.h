@@ -24,14 +24,16 @@ class game{
         array target = {1,2,3,4,5,6,7,8,0};
         bool flag{true};
         std::vector<std::shared_ptr<puzzle>> not_checked{};
+        std::vector<std::shared_ptr<puzzle>> children{};
         std::vector<std::shared_ptr<puzzle>> checked{};
         std::deque<std::shared_ptr<puzzle>> steps;
         void get_puzzle();
         void solvable();
         bool check(array puz) { return puz == target; }
-        void set_children(std::shared_ptr<puzzle> puz);
+        std::vector<std::shared_ptr<puzzle>> set_children(std::shared_ptr<puzzle> puz);
         void BFS_search();
+        void DFS_search();
         void show_steps();
-        //std::shared_ptr<puzzle> get_arr(){ return initial_puz;}
+        std::shared_ptr<puzzle> get_arr(){ return initial_puz;}
 };
 #endif

@@ -38,7 +38,7 @@ void game::solvable(){
     }
 }
 
-void game::set_children(std::shared_ptr<puzzle> puz){
+std::vector<std::shared_ptr<game::puzzle>> game::set_children(std::shared_ptr<puzzle> puz){
     int index[2] = {};
     int move[2] = {-1, 1};
     std::vector<std::array<int,2>> zero_index{};
@@ -80,6 +80,7 @@ void game::set_children(std::shared_ptr<puzzle> puz){
             puz->children.push_back(ptr);
         }
     }
+    return puz->children;
 }
 
 void game::BFS_search(){
@@ -96,6 +97,39 @@ void game::BFS_search(){
         not_checked.erase(not_checked.begin());
         i++;
     }
+}
+
+void game::DFS_search(){
+    solvable();
+    int i{};
+    if (check(not_checked[0]->puz)){
+        std::cout<< "we find the answer\n";
+        not_checked[0]->show_puzzle();
+        flag = false;
+    }
+    children = set_children(not_checked[0]);
+    while(flag && i < 10000){
+        if (check(children[0]->puz)){
+            std::cout<< "we find the answer\n";
+            children[0]->show_puzzle();
+            break;
+        }
+        checked.push_back(children[0]);
+        for (size_t j{}; j < children.size()-1 && set_children(children[0]).size() == 0; j++){
+            children[0]->parent->children.erase(children[0]->parent->children.begin());
+            children.erase(children.begin());
+        }
+        if (set_children(children[0]).size() == 0){
+            children[0]->parent->children.erase(children[0]->parent->children.begin());
+            children = children[0]->parent->children;
+        }
+        else{
+            children[0]->parent->children.erase(children[0]->parent->children.begin());
+            children = set_children(children[0]);
+            children.erase(children.begin());
+        }
+    }
+    flag = true;
 }
 
 void game::show_steps(){
