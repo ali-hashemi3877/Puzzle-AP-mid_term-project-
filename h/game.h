@@ -32,6 +32,6 @@ class game{
         void set_children(std::shared_ptr<puzzle> puz);
         void BFS_search();
         void show_steps();
-        std::shared_ptr<puzzle> get_arr(){ return initial_puz;}
+        //std::shared_ptr<puzzle> get_arr(){ return initial_puz;}
 };
 #endif
