@@ -85,6 +85,7 @@ std::vector<std::shared_ptr<game::puzzle>> game::set_children(std::shared_ptr<pu
 
 void game::BFS_search(){
     solvable();
+    search_algorithm = 1;
     int i{};
     while(flag && i < 10000){
         if (check(not_checked[0]->puz)){
@@ -101,6 +102,7 @@ void game::BFS_search(){
 
 void game::DFS_search(){
     solvable();
+    search_algorithm = 2;
     int i{};
     if (check(not_checked[0]->puz)){
         std::cout<< "we find the answer\n";
@@ -108,7 +110,8 @@ void game::DFS_search(){
         flag = false;
     }
     children = set_children(not_checked[0]);
-    while(flag && i < 10000){
+    while(flag && i < 30){
+        std::cout<< i << "\n";
         if (check(children[0]->puz)){
             std::cout<< "we find the answer\n";
             children[0]->show_puzzle();
@@ -116,25 +119,37 @@ void game::DFS_search(){
         }
         checked.push_back(children[0]);
         for (size_t j{}; j < children.size()-1 && set_children(children[0]).size() == 0; j++){
+            std::cout<< "a\n";
+            children[0]->show_puzzle();
             children[0]->parent->children.erase(children[0]->parent->children.begin());
+            std::cout<< "d\n";
             children.erase(children.begin());
         }
         if (set_children(children[0]).size() == 0){
+            std::cout<< "b\n";
+            children[0]->show_puzzle();
             children[0]->parent->children.erase(children[0]->parent->children.begin());
             children = children[0]->parent->children;
+            children[0]->show_puzzle();
         }
         else{
+            std::cout<< "c\n";
             children[0]->parent->children.erase(children[0]->parent->children.begin());
             children = set_children(children[0]);
             children.erase(children.begin());
         }
+        i++;
     }
     flag = true;
 }
 
 void game::show_steps(){
     if (flag){
-        std::shared_ptr<puzzle> puz = not_checked[0];
+        std::shared_ptr<puzzle> puz{nullptr};
+        if (search_algorithm == 1)
+            puz = not_checked[0];
+        else if (search_algorithm == 2)
+            puz = children[0];
         int i{};
         while (puz != nullptr){
             steps.push_front(puz);

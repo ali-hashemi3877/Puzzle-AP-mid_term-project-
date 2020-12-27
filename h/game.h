@@ -23,6 +23,7 @@ class game{
         std::shared_ptr<puzzle> initial_puz{};
         array target = {1,2,3,4,5,6,7,8,0};
         bool flag{true};
+        int search_algorithm{};
         std::vector<std::shared_ptr<puzzle>> not_checked{};
         std::vector<std::shared_ptr<puzzle>> children{};
         std::vector<std::shared_ptr<puzzle>> checked{};

@@ -12,7 +12,7 @@ int main(){
     //     std::cout<< "child " << i+1 << ":\n";
     //     game.not_checked[i]->show_puzzle();
     // }
-    game.BFS_search();
+    game.DFS_search();
     game.show_steps();
     return 0;
 }
