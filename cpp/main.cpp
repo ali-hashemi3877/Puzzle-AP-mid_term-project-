@@ -13,6 +13,6 @@ int main(){
     //     game.not_checked[i]->show_puzzle();
     // }
     game.DFS_search();
-    game.show_steps();
+    //game.show_steps();
     return 0;
 }

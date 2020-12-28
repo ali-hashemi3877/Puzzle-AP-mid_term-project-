@@ -110,7 +110,7 @@ void game::DFS_search(){
         flag = false;
     }
     children = set_children(not_checked[0]);
-    while(flag && i < 30){
+    while(flag && i < 10000){
         std::cout<< i << "\n";
         if (check(children[0]->puz)){
             std::cout<< "we find the answer\n";
@@ -118,25 +118,24 @@ void game::DFS_search(){
             break;
         }
         checked.push_back(children[0]);
-        for (size_t j{}; j < children.size()-1 && set_children(children[0]).size() == 0; j++){
+        while (children.size() > 1 && set_children(children[0]).size() == 0){
             std::cout<< "a\n";
-            children[0]->show_puzzle();
             children[0]->parent->children.erase(children[0]->parent->children.begin());
-            std::cout<< "d\n";
             children.erase(children.begin());
         }
         if (set_children(children[0]).size() == 0){
             std::cout<< "b\n";
-            children[0]->show_puzzle();
             children[0]->parent->children.erase(children[0]->parent->children.begin());
-            children = children[0]->parent->children;
-            children[0]->show_puzzle();
+            std::shared_ptr<puzzle> p{};
+            p = children[0]->parent->parent;
+            while (p->children.size() == 0){
+                p = p->parent;
+            }
+            children = p->children;
         }
         else{
-            std::cout<< "c\n";
             children[0]->parent->children.erase(children[0]->parent->children.begin());
             children = set_children(children[0]);
-            children.erase(children.begin());
         }
         i++;
     }
