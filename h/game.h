@@ -6,6 +6,8 @@
 #include <vector>
 #include <deque>
 #include <memory>
+#include <ctime>
+#include <cstdlib>
 
 using array = std::array<std::array<int, 3>, 3>;
 
@@ -23,8 +25,10 @@ class game{
         std::shared_ptr<puzzle> initial_puz{};
         array target = {1,2,3,4,5,6,7,8,0};
         bool flag{true};
+        bool random_or_normal{true};
         int search_algorithm{};
         std::vector<std::shared_ptr<puzzle>> not_checked{};
+        std::vector<std::shared_ptr<puzzle>> all_puz{};
         std::vector<std::shared_ptr<puzzle>> children{};
         std::vector<std::shared_ptr<puzzle>> checked{};
         std::deque<std::shared_ptr<puzzle>> steps;

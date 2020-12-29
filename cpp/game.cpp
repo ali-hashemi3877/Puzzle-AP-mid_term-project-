@@ -10,9 +10,29 @@ void game::puzzle::show_puzzle(){
 
 void game::get_puzzle(){
     array puz{};
-    for (size_t i{}; i < 3; i++)
-        for (size_t j{}; j < 3; j++)
-            std::cin >> puz[i][j];
+    std::cin >> random_or_normal;
+    if (random_or_normal)
+        for (size_t i{}; i < 3; i++)
+            for (size_t j{}; j < 3; j++)
+                std::cin >> puz[i][j];
+    else{
+        std::vector<int> ran{};
+        srand(time(NULL));
+        while (ran.size() < 9){
+            int a = rand() % 9;
+            bool f{true};
+            for (size_t j{}; j < ran.size(); j++)
+                if (a == ran[j]){
+                    f = false;
+                    break;
+                }
+            if (f)
+                ran.push_back(a);
+        }
+        for (size_t i{}; i < 3; i++)
+            for (size_t j{}; j < 3; j++)
+                puz[i][j] = ran[3*i + j];
+    }
     auto root = std::make_shared<puzzle>(puz);
     initial_puz = root;    
 }
@@ -30,6 +50,7 @@ void game::solvable(){
                 invertion++;
     if (invertion % 2 == 0){
         not_checked.push_back(initial_puz);
+        all_puz.push_back(initial_puz);
         flag = true;
     }
     else{
@@ -70,13 +91,14 @@ std::vector<std::shared_ptr<game::puzzle>> game::set_children(std::shared_ptr<pu
         arr[index[0]][index[1]] = arr[zero_index[i][0]][zero_index[i][1]];
         arr[zero_index[i][0]][zero_index[i][1]] = 0;
         bool flag{true};
-        for (size_t j{}; j < not_checked.size(); j++)
-            if (not_checked[j]->puz == arr)
+        for (size_t j{}; j < all_puz.size(); j++)
+            if (all_puz[j]->puz == arr)
                 flag = false;
         if (flag){
             auto ptr = std::make_shared<puzzle>(arr);
             ptr->parent = puz;
             not_checked.push_back(ptr);
+            all_puz.push_back(ptr);
             puz->children.push_back(ptr);
         }
     }
@@ -104,40 +126,40 @@ void game::DFS_search(){
     solvable();
     search_algorithm = 2;
     int i{};
+    children = not_checked;
     if (check(not_checked[0]->puz)){
         std::cout<< "we find the answer\n";
         not_checked[0]->show_puzzle();
         flag = false;
     }
-    children = set_children(not_checked[0]);
-    while(flag && i < 10000){
-        std::cout<< i << "\n";
-        if (check(children[0]->puz)){
-            std::cout<< "we find the answer\n";
-            children[0]->show_puzzle();
-            break;
-        }
-        checked.push_back(children[0]);
-        while (children.size() > 1 && set_children(children[0]).size() == 0){
-            std::cout<< "a\n";
-            children[0]->parent->children.erase(children[0]->parent->children.begin());
-            children.erase(children.begin());
-        }
-        if (set_children(children[0]).size() == 0){
-            std::cout<< "b\n";
-            children[0]->parent->children.erase(children[0]->parent->children.begin());
-            std::shared_ptr<puzzle> p{};
-            p = children[0]->parent->parent;
-            while (p->children.size() == 0){
-                p = p->parent;
+    if (flag){
+        children = set_children(not_checked[0]);
+        while(i < 5000){
+            if (check(children[0]->puz)){
+                std::cout<< "we find the answer\n";
+                children[0]->show_puzzle();
+                break;
             }
-            children = p->children;
+            checked.push_back(children[0]);
+            while (children.size() > 1 && set_children(children[0]).size() == 0){
+                children[0]->parent->children.erase(children[0]->parent->children.begin());
+                children.erase(children.begin());
+            }
+            if (set_children(children[0]).size() == 0){
+                children[0]->parent->children.erase(children[0]->parent->children.begin());
+                std::shared_ptr<puzzle> p{};
+                p = children[0]->parent->parent;
+                while (p->children.size() == 0){
+                    p = p->parent;
+                }
+                children = p->children;
+            }
+            else{
+                children[0]->parent->children.erase(children[0]->parent->children.begin());
+                children = set_children(children[0]);
+            }
+            i++;
         }
-        else{
-            children[0]->parent->children.erase(children[0]->parent->children.begin());
-            children = set_children(children[0]);
-        }
-        i++;
     }
     flag = true;
 }
