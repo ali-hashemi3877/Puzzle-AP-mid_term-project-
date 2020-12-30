@@ -6,7 +6,9 @@
 #include <vector>
 #include <deque>
 #include <memory>
+#include <algorithm>
 #include <ctime>
+#include <iomanip>
 #include <cstdlib>
 
 using array = std::array<std::array<int, 3>, 3>;
@@ -18,15 +20,20 @@ class game{
                 array puz{};
                 std::shared_ptr<puzzle> parent;
                 std::vector<std::shared_ptr<puzzle>> children{};
+                int no_move{};
+                int manhattan{};
+                int periority{};
                 puzzle(array puzzle) : puz{puzzle} {}
                 puzzle() = default;
                 void show_puzzle();
+                void manhattan_distance();
         };
         std::shared_ptr<puzzle> initial_puz{};
         array target = {1,2,3,4,5,6,7,8,0};
         bool flag{true};
-        bool random_or_normal{true};
+        int random_or_normal{};
         int search_algorithm{};
+        char defult_or_another{};
         std::vector<std::shared_ptr<puzzle>> not_checked{};
         std::vector<std::shared_ptr<puzzle>> all_puz{};
         std::vector<std::shared_ptr<puzzle>> children{};
@@ -38,6 +45,7 @@ class game{
         std::vector<std::shared_ptr<puzzle>> set_children(std::shared_ptr<puzzle> puz);
         void BFS_search();
         void DFS_search();
+        void A_star_search();
         void show_steps();
         std::shared_ptr<puzzle> get_arr(){ return initial_puz;}
 };
