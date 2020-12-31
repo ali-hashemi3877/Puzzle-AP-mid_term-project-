@@ -35,6 +35,10 @@ void game::start(){
     std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: if you choose another target you can't use A* algorithm)\n";
     std::cout<< "Please enter d or a.(defult target or another target)";
     std::cin >> defult_or_another;
+    while (defult_or_another != 'a' && defult_or_another != 'd'){
+        std::cout<< "ٌ\033[0m\033[31mWrong entry!\n\033[0m\033[34mPlease enter d or a.(defult target or another target)";
+        std::cin >> defult_or_another;
+    }
     if (defult_or_another == 'a'){
         std::cout<< "Please enter your target puzzle!\n";
         for (size_t i{}; i < 3; i++)
@@ -52,6 +56,10 @@ void game::start(){
     array puz{};
     int a{};
     std::cin >> a;
+    while (a != 1 && a != 2){
+        std::cout<< "ٌ\033[0m\033[31mWrong entry!\n\033[0m\033[34mPlease enter 1 or 2.(random puzzle or your puzzle)";
+        std::cin >> a;
+    }
     random_or_normal = a - 1;
     while (true){
         if (random_or_normal)
@@ -94,6 +102,11 @@ void game::start(){
         std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: In this method there is possibility that we can't show all of the steps(Maximum steps we show is 250!\n";
         std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
         std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS)";
+        std::cin >> search_algorithm;
+        while (search_algorithm != 1 && search_algorithm != 2){
+            std::cout<< "ٌ\033[0m\033[31mWrong entry!\n\033[0m\033[34mPlease choose one of the methods.(1 for DFS, 2 for BFS)";
+            std::cin >> search_algorithm;
+        }
     }
     else if(defult_or_another == 'd'){
         std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method";
@@ -101,8 +114,12 @@ void game::start(){
         std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
         std::cout<< "3: A* algorithm. This algorithm is most efficient algorihtm we have!\n";
         std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS & 3 for A*)";
+        std::cin >> search_algorithm;
+        while (search_algorithm != 1 && search_algorithm != 2 && search_algorithm != 3){
+            std::cout<< "ٌ\033[0m\033[31mWrong entry!\n\033[0m\033[34mPlease choose one of the methods.(1 for DFS, 2 for BFS & 3 for A*)";
+            std::cin >> search_algorithm;
+        }
     }
-    std::cin >> search_algorithm;
 }
 
 void game::solvable(){
