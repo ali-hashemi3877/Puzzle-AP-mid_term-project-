@@ -3,9 +3,10 @@
 void game::puzzle::show_puzzle(){
     for (size_t i{}; i < 3; i++){
         for (size_t j{}; j < 3; j++)
-            std::cout<< puz[i][j] << " ";
+            std::cout<< "\033[0m\033[32m" << puz[i][j] << " ";
         std::cout<< std::endl;
     }
+    std::cout<< "\033[0m";
 }
 
 void game::puzzle::manhattan_distance(){
@@ -19,18 +20,19 @@ void game::puzzle::manhattan_distance(){
                 }
 }
 
-void game::get_puzzle(){
-    std::cout<< "\n\n" << "*********************************** ";
-    std::cout<< "SLIDING PUZZLE ! ***********************************\n";
-    std::cout<< "****************************************************************************************\n";
-    std::cout<< "\nWelcome to this wonderful game! In this game we solve your 8 puzzle!\n";
+void game::start(){
+    std::cout<< "\n\n" << "\033[0m\033[33m*********************************** ";
+    std::cout<< "\033[1m\033[31mSLIDING PUZZLE ! \033[0m\033[33m***********************************\n";
+    std::cout<< "****************************************************************************************\033[0m\n";
+    std::cout<< "\n\033[34mWelcome to this wonderful game! In this game we solve your 8 puzzle!\n";
     std::cout<< "OK! Now start the game!\nThe defult target of this game is:\n";
     for (size_t i{}; i < 3; i++){
         for (size_t j{}; j < 3; j++)
-            std::cout<< target[i][j] << " ";
+            std::cout<< "\033[0m\033[32m" << target[i][j] << " ";
         std::cout<< std::endl;
     }
-    std::cout<< "Now do you want from us to solve puzzle with respect to defult target or another target?\n";
+    std::cout<< "\033[0m\033[34mNow do you want from us to solve puzzle with respect to defult target or another target?\n";
+    std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: if you choose another target you can't use A* algorithm)\n";
     std::cout<< "Please enter d or a.(defult target or another target)";
     std::cin >> defult_or_another;
     if (defult_or_another == 'a'){
@@ -42,10 +44,10 @@ void game::get_puzzle(){
     std::cout<< "Target is:\n";
     for (size_t i{}; i < 3; i++){
         for (size_t j{}; j < 3; j++)
-            std::cout<< target[i][j] << " ";
+            std::cout<< "\033[0m\033[32m" <<target[i][j] << " ";
         std::cout<< std::endl;
     }
-    std::cout<< "1: Do you want to solve a random puzzle?\n2: Do you want to solve your puzzle?\n";
+    std::cout<< "\033[0m\033[34m1: Do you want to solve a random puzzle?\n2: Do you want to solve your puzzle?\n";
     std::cout<< "Please enter 1 or 2.(random puzzle or your puzzle)";
     array puz{};
     int a{};
@@ -80,18 +82,26 @@ void game::get_puzzle(){
         if (flag)
             break;
         else if(random_or_normal){
-            std::cout<< "This puzzle with respect to the target is unsolvable\n";
+            std::cout<< "\033[0m\033[31mThis puzzle with respect to the target is unsolvable\n";
             std::cout<< "Please enter another puzzle!\n";
         }
     }
-    std::cout<< "This is initial puzzle:\n";
+    std::cout<< "\033[0m\033[34mThis is initial puzzle:\n";
     initial_puz->show_puzzle();
-    std::cout<< "Now you have to decide how to solve the puzzle. we have 3 method. choose one of them!\n";
-    std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method";
-    std::cout<< "(Note: In this method there is possibility that we can't show all of the steps(Maximum steps we show is 250!\n";
-    std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
-    std::cout<< "3: A* algorithm. This algorithm is most efficient algorihtm we have!\n";
-    std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS & 3 for A*)";
+    std::cout<< "\033[0m\033[34mNow you have to decide how to solve the puzzle. we have 3 method. choose one of them!\n";
+    if (defult_or_another == 'a'){
+        std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method";
+        std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: In this method there is possibility that we can't show all of the steps(Maximum steps we show is 250!\n";
+        std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
+        std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS)";
+    }
+    else if(defult_or_another == 'd'){
+        std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method";
+        std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: In this method there is possibility that we can't show all of the steps(Maximum steps we show is 250!\n";
+        std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
+        std::cout<< "3: A* algorithm. This algorithm is most efficient algorihtm we have!\n";
+        std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS & 3 for A*)";
+    }
     std::cin >> search_algorithm;
 }
 
@@ -177,7 +187,7 @@ void game::BFS_search(){
     int i{};
     while(flag && i < 362880){
         if (check(not_checked[0]->puz)){
-            std::cout<< "we find the answer\n";
+            std::cout<< "\033[0m\033[1m\033[33mwe find the answer\n";
             break;
         }
         set_children(not_checked[0]);
@@ -191,15 +201,14 @@ void game::DFS_search(){
     int i{};
     children = not_checked;
     if (check(not_checked[0]->puz)){
-        std::cout<< "we find the answer\n";
+        std::cout<< "\033[0m\033[1m\033[33mwe find the answer\n";
         flag = false;
     }
     if (flag){
         children = set_children(not_checked[0]);
         while(i < 362880){
-            std::cout<< i << "\n";
             if (check(children[0]->puz)){
-                std::cout<< "we find the answer\n";
+                std::cout<< "\033[0m\033[1m\033[33mwe find the answer\n";
                 break;
             }
             checked.push_back(children[0]);
@@ -230,7 +239,7 @@ void game::A_star_search(){
     int i{};
     while(flag && i < 362880){
         if (check(not_checked[0]->puz)){
-            std::cout<< "we find the answer\n";
+            std::cout<< "\033[0m\033[1m\033[33mwe find the answer\n";
             break;
         }
         set_children(not_checked[0]);
@@ -256,7 +265,7 @@ void game::show_steps(){
             i++;
         }
         for (size_t i{}; i < steps.size(); i++){
-            std::cout<< "step " << i+1 << ":\n";
+            std::cout<< "\033[0m\033[34mstep " << i+1 << ":\n";
             steps[i]->show_puzzle();
         }
     }

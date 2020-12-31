@@ -39,7 +39,7 @@ class game{
         std::vector<std::shared_ptr<puzzle>> children{};
         std::vector<std::shared_ptr<puzzle>> checked{};
         std::deque<std::shared_ptr<puzzle>> steps;
-        void get_puzzle();
+        void start();
         void solvable();
         bool check(array puz) { return puz == target; }
         std::vector<std::shared_ptr<puzzle>> set_children(std::shared_ptr<puzzle> puz);
