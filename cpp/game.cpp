@@ -62,10 +62,12 @@ void game::start(){
     }
     random_or_normal = a - 1;
     while (true){
-        if (random_or_normal)
+        if (random_or_normal){
+            std::cout<< "Pleas enter your puzzle.\n";
             for (size_t i{}; i < 3; i++)
                 for (size_t j{}; j < 3; j++)
                     std::cin >> puz[i][j];
+        }
         else{
             std::vector<int> ran{};
             srand(time(NULL));
@@ -97,10 +99,10 @@ void game::start(){
     std::cout<< "\033[0m\033[34mThis is initial puzzle:\n";
     initial_puz->show_puzzle();
     std::cout<< "\033[0m\033[34mNow you have to decide how to solve the puzzle. we have 3 method. choose one of them!\n";
+    std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method\n";
+    std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: In this method you have to choose the depth you want to search. Maybe we can't find the target in this depth & if you choose the depth greater than 250, there is possibility that we can't show all of the steps(Maximum steps we show is 250!)\n";
+    std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
     if (defult_or_another == 'a'){
-        std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method";
-        std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: In this method there is possibility that we can't show all of the steps(Maximum steps we show is 250!\n";
-        std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
         std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS)";
         std::cin >> search_algorithm;
         while (search_algorithm != 1 && search_algorithm != 2){
@@ -109,9 +111,6 @@ void game::start(){
         }
     }
     else if(defult_or_another == 'd'){
-        std::cout<< "1: DFS algorihtm. This algorithm take more time & more steps to solve the puzzle than other method";
-        std::cout<< "(\033[0m\033[31mNote\033[0m\033[34m: In this method there is possibility that we can't show all of the steps(Maximum steps we show is 250!\n";
-        std::cout<< "2: BFS algorithm. This algorithm is faster with fewer steps than DFS algorithm\n";
         std::cout<< "3: A* algorithm. This algorithm is most efficient algorihtm we have!\n";
         std::cout<< "Please choose one of the methods.(1 for DFS, 2 for BFS & 3 for A*)";
         std::cin >> search_algorithm;
@@ -190,9 +189,9 @@ std::vector<std::shared_ptr<game::puzzle>> game::set_children(std::shared_ptr<pu
             not_checked.push_back(ptr);
             all_puz.push_back(ptr);
             puz->children.push_back(ptr);
+            ptr->no_move = puz->no_move + 1;
             if (search_algorithm == 3){
                 ptr->manhattan_distance();
-                ptr->no_move = puz->no_move + 1;
                 ptr->periority = ptr->manhattan + ptr->no_move;
             }
         }
@@ -215,13 +214,17 @@ void game::BFS_search(){
 }
 
 void game::DFS_search(){
+    int depth{};
+    std::cout<< "Please enter the depth you want.";
+    std::cin >> depth;
     int i{};
+    bool f{true};
     children = not_checked;
     if (check(not_checked[0]->puz)){
         std::cout<< "\033[0m\033[1m\033[33mwe find the answer\n";
-        flag = false;
+        f = false;
     }
-    if (flag){
+    if (f){
         children = set_children(not_checked[0]);
         while(i < 362880){
             if (check(children[0]->puz)){
@@ -244,12 +247,38 @@ void game::DFS_search(){
             }
             else{
                 children[0]->parent->children.erase(children[0]->parent->children.begin());
-                children = set_children(children[0]);
+                if (children[0]->no_move == depth){
+                    if (children.size() > 1)
+                        children.erase(children.begin());
+                    else{
+                        std::shared_ptr<puzzle> p{};
+                        if (children[0]->parent->parent != nullptr)
+                            p = children[0]->parent->parent;
+                        else{
+                            std::cout<< "\033[1m\033[31mSorry! We can't find the answer in this depth!\033[0m\n";
+                            break;
+                        }
+                        while (p->children.size() == 0 && flag){
+                            if (p->parent != nullptr)
+                                p = p->parent;
+                            else
+                                flag = false;
+                        }
+                        if (flag)
+                            children = p->children;
+                        else{
+                            std::cout<< "\033[1m\033[31mSorry! We can't find the answer in this depth!\033[0m\n";
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                else
+                    children = set_children(children[0]);
             }
             i++;
         }
     }
-    flag = true;
 }
 
 void game::A_star_search(){
