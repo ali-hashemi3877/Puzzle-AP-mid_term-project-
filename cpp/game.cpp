@@ -239,11 +239,26 @@ void game::DFS_search(){
             if (set_children(children[0]).size() == 0){
                 children[0]->parent->children.erase(children[0]->parent->children.begin());
                 std::shared_ptr<puzzle> p{};
-                p = children[0]->parent->parent;
-                while (p->children.size() == 0){
-                    p = p->parent;
+                if (children[0]->parent->parent != nullptr)
+                    p = children[0]->parent->parent;
+                else{
+                    std::cout<< "\033[1m\033[31mSorry! We can't find the answer in this depth!\033[0m\n";
+                    flag = false;
+                    break;
                 }
-                children = p->children;
+                while (p->children.size() == 0 && flag){
+                    if (p->parent != nullptr)
+                        p = p->parent;
+                    else
+                        flag = false;
+                }
+                if (flag)
+                    children = p->children;
+                else{
+                    std::cout<< "\033[1m\033[31mSorry! We can't find the answer in this depth!\033[0m\n";
+                    flag = false;
+                    break;
+                }
             }
             else{
                 children[0]->parent->children.erase(children[0]->parent->children.begin());
@@ -256,6 +271,7 @@ void game::DFS_search(){
                             p = children[0]->parent->parent;
                         else{
                             std::cout<< "\033[1m\033[31mSorry! We can't find the answer in this depth!\033[0m\n";
+                            flag = false;
                             break;
                         }
                         while (p->children.size() == 0 && flag){
@@ -264,8 +280,9 @@ void game::DFS_search(){
                             else
                                 flag = false;
                         }
-                        if (flag)
+                        if (flag){
                             children = p->children;
+                        }
                         else{
                             std::cout<< "\033[1m\033[31mSorry! We can't find the answer in this depth!\033[0m\n";
                             flag = false;
